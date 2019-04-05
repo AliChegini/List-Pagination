@@ -8,10 +8,15 @@ FSJS project 2 - List Pagination
    need to reference and/or manipulate.
 ***/
 
-var page = document.getElementsByClassName("page")[0]
-var students = document.getElementsByClassName("student-item cf")
-var numberOfPages = Math.floor(students.length/10) + 1
+const studentsPerPage = 10
 
+// create a div elements for buttons and add it to body
+var divButton = document.createElement("div")
+divButton.id = "buttonGroup"
+document.body.appendChild(divButton)
+
+var students = document.getElementsByClassName("student-item cf")
+var numberOfPages = Math.floor(students.length/studentsPerPage) + 1
 
 // showPage function to hide all of the items in the
 // list except for the ten that should show.
@@ -22,7 +27,7 @@ function showPage(pageNumber) {
   }
 
   // for loop to show certain number of students
-  for (i = (pageNumber - 1) * 10; i < (pageNumber * 10); i++) {
+  for (i = (pageNumber - 1) * studentsPerPage; i < (pageNumber * studentsPerPage); i++) {
     // condition to break out of the loop in last page
     if (i == students.length) {
       break;
@@ -44,12 +49,22 @@ function appendPageLinks() {
   for (i = 1; i <= numberOfPages; i++) {
     var button = document.createElement("button")
     button.innerHTML = i
-    page.appendChild(button)
+    divButton.appendChild(button)
   }
 
   // eventListener for all buttons --- Event Bubbling
   document.addEventListener("click", (event) => {
+
+    var buttons = document.getElementsByTagName("BUTTON")
+
+    // remove previous active class
+    for (i = 0; i < buttons.length; i++) {
+      buttons[i].classList.remove("active")
+    }
+
     if (event.target.tagName.toLowerCase() == "button") {
+      event.target.classList.add("active")
+
       var page = parseInt(event.target.outerText)
       // calling showPage with pageNumber
       showPage(page)
@@ -59,8 +74,3 @@ function appendPageLinks() {
 }
 
 appendPageLinks()
-
-// Todo :
-// improve layout and design
-// get rid of magic numbers 10
-// active link should be colored and mouse over effect
